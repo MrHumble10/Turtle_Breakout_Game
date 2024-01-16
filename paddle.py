@@ -9,7 +9,7 @@ class Paddle(Turtle):
         self.color("white")
         self.shapesize(stretch_wid=1, stretch_len=10)
         self.penup()
-        self.goto(0, -260)
+        self.goto(0, -280)
 
     def go_right(self):
         if not self.pos() > (300, -260):

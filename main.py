@@ -8,6 +8,7 @@ from scoreboard import ScoreBoard
 from lives import ScoreBoardLives
 from record import ScoreBoardRecord
 import pyglet
+from tkinter import TclError
 
 
 points = 0
@@ -16,7 +17,8 @@ y = 250
 idx = 0
 color = ["red", "green", "orange"]
 bricks = []
-t = 0.02
+level = 0
+t = 0.09
 paddle_size = 10
 paddle_distance = 110
 if not os.path.isfile('points.txt'):
@@ -75,13 +77,12 @@ def new_game():
     time.sleep(3)
     game_is_on = True
     screen.tracer(1)
-
     while game_is_on:
         time.sleep(t)
         screen.update()
         ball.move()
 
-        if ball.ycor() < -280:
+        if ball.ycor() < -275:
             game_sound('music/life.wav')
             ball.reset_ball()
             screen.tracer(1)
@@ -91,18 +92,21 @@ def new_game():
             game_sound('music/game_over.wav')
             scoreboard.game_over()
             game_is_on = False
+            ball.reset_ball()
+
 
         if ball.ycor() > 275:
             game_sound('music/up.mp3')
             ball.bounce_y()
 
-        if ball.distance(paddle) < paddle_distance and ball.ycor() < -230:
+        if paddle.distance(ball) < paddle_distance and ball.ycor() < -250:
+            print(ball.xcor())
             screen.tracer(0)
             screen.update()
             game_sound('music/ding.wav')
             ball.bounce_y()
 
-        if ball.xcor() > 360 or ball.xcor() < -360:
+        elif ball.xcor() > 380 or ball.xcor() < -380:
             game_sound('music/sides.wav')
             ball.bounce_x()
 
@@ -141,8 +145,10 @@ def new_game():
             screen.update()
             time.sleep(3)
             screen.reset()
-
-            new_game()
+            try:
+                new_game()
+            except OSError:
+                pass
 
 
 
@@ -161,5 +167,8 @@ def new_game():
     screen.exitonclick()
 
 
-new_game()
+try:
+    new_game()
+except TclError:
+    pass
 
