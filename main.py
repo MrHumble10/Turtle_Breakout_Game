@@ -1,5 +1,6 @@
 import time
 import os
+import turtle
 from turtle import Screen, Turtle
 from bricks import Bricks
 from paddle import Paddle
@@ -183,6 +184,6 @@ def new_game():
 
 try:
     new_game()
-except TclError:
+except TclError or OSError or turtle.Terminator:
     pass
 
