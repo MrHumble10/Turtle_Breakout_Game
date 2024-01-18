@@ -4,9 +4,7 @@ from turtle import Screen, Turtle
 from bricks import Bricks
 from paddle import Paddle
 from ball import Ball
-from scoreboard import ScoreBoard
-from lives import ScoreBoardLives
-from record import ScoreBoardRecord
+from scoreboard import ScoreBoard, ScoreBoardLives, ScoreBoardRecord
 import pyglet
 from tkinter import TclError
 
@@ -18,7 +16,7 @@ idx = 0
 color = ["red", "green", "orange"]
 bricks = []
 level = 0
-t = 0.09
+t = 0.04
 paddle_size = 10
 paddle_distance = 110
 if not os.path.isfile('points.txt'):
@@ -51,8 +49,36 @@ def new_game():
         game_sound('music/start.wav')
         # game_sound('music/glass_break.wav')
 
-    screen = Screen()
+    def collision_with_paddle():
+        print(paddle.xcor(), ball.xcor())
+        if paddle.distance(ball) < paddle_distance and ball.ycor() < -250:
+            print('HIT')
 
+            if paddle.xcor() < ball.xcor():
+                if ball.x_move == -10:
+                    ball.bounce_y()
+                else:
+                    print(f'distance right is {ball.distance(paddle)}')
+                    ball.bounce_y()
+                    ball.bounce_x()
+                return
+
+            elif paddle.xcor() > ball.xcor():
+                if ball.x_move == -10:
+                    print(f'distance left is   {ball.distance(paddle)}')
+
+                    ball.bounce_y()
+                    ball.bounce_x()
+                else:
+                    ball.bounce_y()
+                return
+
+            elif paddle.xcor() == ball.xcor():
+                ball.bounce_y()
+                return
+
+    screen = Screen()
+    screen.title("Blackout Game")
     screen.bgcolor("Black")
     screen.setup(width=800, height=600)
 
@@ -94,17 +120,11 @@ def new_game():
             game_is_on = False
             ball.reset_ball()
 
-
         if ball.ycor() > 275:
             game_sound('music/up.mp3')
             ball.bounce_y()
 
-        if paddle.distance(ball) < paddle_distance and ball.ycor() < -250:
-            print(ball.xcor())
-            screen.tracer(0)
-            screen.update()
             game_sound('music/ding.wav')
-            ball.bounce_y()
 
         elif ball.xcor() > 380 or ball.xcor() < -380:
             game_sound('music/sides.wav')
@@ -113,9 +133,11 @@ def new_game():
         for brick in bricks:
             if ball.distance(brick) < 30:
                 points += 1
+                screen.tracer(0)
+                screen.update()
                 with open('points.txt', mode='r') as dt:
                     record = dt.read()
-                    print(record)
+                    # print(record)
                 if points > int(record):
                     with open('points.txt', mode='w') as dt:
                         dt.write(f'{points}')
@@ -124,6 +146,8 @@ def new_game():
                 brick.color('black')
                 bricks.remove(brick)
                 ball.bounce_y()
+
+        collision_with_paddle()
 
         if len(bricks) == 0:
             game_sound('music/win.wav')
@@ -152,17 +176,7 @@ def new_game():
 
 
 
-            # screen.update()
-            # level += 1
-            # print(game_speed)
-            # if game_speed > 0.02:
-            #     game_speed -= 0.02
-            # else:
-            #     game_speed = 0.03
-            # time.sleep(5)
-            # screen.reset()
-            # if scoreboard_lives.lives != 0:
-            #     game(game_speed)
+
 
     screen.exitonclick()
 

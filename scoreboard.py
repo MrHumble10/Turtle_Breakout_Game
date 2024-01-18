@@ -11,15 +11,12 @@ class ScoreBoard(Turtle):
         self.score = score
         self.lives = 3
         self.update_points()
-        
-
 
     def update_points(self):
         self.clear()
-        self.color('white')
-        self.goto(290, -230)
-        self.write(f"Best Score: {self.score}", align='center', font=('Elefant', 10, 'bold'))
-
+        self.color('green')
+        self.goto(300, -230)
+        self.write(f"Current Score: {self.score}", align='center', font=('Elefant', 10, 'bold'))
 
     def point(self):
         self.score += 1
@@ -40,6 +37,45 @@ class ScoreBoard(Turtle):
 
     def best_record(self):
         self.clear()
-        self.color('white')
+        self.color('green')
         self.goto(290, -200)
         self.write(f"Best record: {self.record}", align='center', font=('Elefant', 10, 'bold'))
+
+
+class ScoreBoardLives(Turtle):
+    def __init__(self):
+        super().__init__()
+        self.hideturtle()
+        self.penup()
+        self.lives = 3
+        self.update_lives()
+
+    def update_lives(self):
+        self.clear()
+        self.color('green')
+        self.goto(290, -200)
+        self.write(f"Your Lives: {self.lives}",align='center',  font=('Elefant', 10, 'bold'))
+
+    def game_lives(self):
+        self.lives -= 1
+
+        self.update_lives()
+
+
+class ScoreBoardRecord(Turtle):
+    def __init__(self):
+        super().__init__()
+        self.hideturtle()
+        self.penup()
+        with open('points.txt', mode='r') as dt:
+            self.record = dt.read()
+        self.update_record()
+
+    def update_record(self):
+        self.clear()
+        self.color('green')
+        self.goto(300, -170)
+        self.write(f"Best Record: {self.record}", align='center',  font=('Elefant', 10, 'bold'))
+
+
+
