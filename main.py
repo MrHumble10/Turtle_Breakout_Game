@@ -52,7 +52,7 @@ def new_game():
     def collision_with_paddle():
         print(paddle.xcor(), ball.xcor())
         if paddle.distance(ball) < paddle_distance and ball.ycor() < -250:
-            print('HIT')
+            game_sound('music/ding.wav')
 
             if paddle.xcor() < ball.xcor():
                 if ball.x_move == -10:
